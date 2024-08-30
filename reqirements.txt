@@ -1,0 +1,6 @@
+omegaconf
+hydra-core>=1.1
+rl-games==1.6.0
+gym==0.23.1
+numpy==1.19.5
+torch==2.4.0
