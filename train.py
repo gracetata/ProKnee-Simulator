@@ -185,10 +185,10 @@ def launch_rlg_hydra(cfg: DictConfig):
     # register new AMP network builder and agent
     def build_runner(algo_observer):
         runner = Runner(algo_observer)
-        runner.algo_factory.register_builder('amp_continuous', lambda **kwargs : amp_continuous.AMPAgent(**kwargs))
-        runner.player_factory.register_builder('amp_continuous', lambda **kwargs : amp_players.AMPPlayerContinuous(**kwargs))
-        model_builder.register_model('continuous_amp', lambda network, **kwargs : amp_models.ModelAMPContinuous(network))
-        model_builder.register_network('amp', lambda **kwargs : amp_network_builder.AMPBuilder())
+        runner.algo_factory.register_builder('amp_continuous', lambda **kwargs: amp_continuous.AMPAgent(**kwargs))
+        runner.player_factory.register_builder('amp_continuous', lambda **kwargs: amp_players.AMPPlayerContinuous(**kwargs))
+        model_builder.register_model('continuous_amp', lambda network, **kwargs: amp_models.ModelAMPContinuous(network))
+        model_builder.register_network('amp', lambda **kwargs: amp_network_builder.AMPBuilder())
 
         return runner
 

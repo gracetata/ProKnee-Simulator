@@ -366,6 +366,8 @@ class HumanoidAMPBase(VecTask):
             pd_tar = self._action_to_pd_targets(self.actions)
             pd_tar_tensor = gymtorch.unwrap_tensor(pd_tar)
             self.gym.set_dof_position_target_tensor(self.sim, pd_tar_tensor)
+            force_tensor = self.gym.acquire_dof_force_tensor(self.sim)
+            self.extras["torque"] = gymtorch.wrap_tensor(force_tensor)
         else:
             forces = self.actions * self.motor_efforts.unsqueeze(0) * self.power_scale
             force_tensor = gymtorch.unwrap_tensor(forces)

@@ -26,7 +26,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import torch 
+import torch
+import time
 
 from rl_games.algos_torch import players
 from rl_games.algos_torch import torch_ext
@@ -97,9 +98,16 @@ class CommonPlayer(players.PpoPlayerContinuous):
                     action = self.get_masked_action(obs_dict, masks, is_determenistic)
                 else:
                     action = self.get_action(obs_dict, is_determenistic)
-                obs_dict, r, done, info =  self.env_step(self.env, action)
+                obs_dict, r, done, info = self.env_step(self.env, action)
                 cr += r
                 steps += 1
+                # log for torque statistic
+                # with open("runs/humanstatistic.txt", "a+") as f:
+                #     agent_obs = obs_dict['obs'].cpu().numpy().tolist()[0]
+                #     torque = 0
+                #     if "torque" in info:
+                #         torque = info['torque'].cpu().numpy().tolist()
+                #     f.write("{},{}\n".format(agent_obs[45], torque[24]))
   
                 self._post_step(info)
 
