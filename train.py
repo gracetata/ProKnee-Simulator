@@ -32,7 +32,6 @@
 import hydra
 
 from omegaconf import DictConfig, OmegaConf
-from omegaconf import DictConfig, OmegaConf
 
 
 def preprocess_train_config(cfg, config_dict):
@@ -71,14 +70,12 @@ def preprocess_train_config(cfg, config_dict):
 @hydra.main(version_base="1.1", config_name="config", config_path="./cfg")
 def launch_rlg_hydra(cfg: DictConfig):
 
-    import logging
     import os
     from datetime import datetime
 
     # noinspection PyUnresolvedReferences
     import isaacgym
     from isaacgymenvs.pbt.pbt import PbtAlgoObserver, initial_pbt_check
-    from isaacgymenvs.utils.rlgames_utils import multi_gpu_get_rank
     from hydra.utils import to_absolute_path
     from isaacgymenvs.tasks import isaacgym_task_map
     import gym
@@ -95,8 +92,11 @@ def launch_rlg_hydra(cfg: DictConfig):
     from rl_games.algos_torch import model_builder
     from isaacgymenvs.learning import amp_continuous
     from isaacgymenvs.learning import amp_players
+    from isaacgymenvs.humanipro import pro_amp_players
     from isaacgymenvs.learning import amp_models
+    from isaacgymenvs.humanipro import pro_amp_models
     from isaacgymenvs.learning import amp_network_builder
+    from isaacgymenvs.humanipro import pro_amp_network_builder
     import isaacgymenvs
 
 
@@ -187,8 +187,11 @@ def launch_rlg_hydra(cfg: DictConfig):
         runner = Runner(algo_observer)
         runner.algo_factory.register_builder('amp_continuous', lambda **kwargs: amp_continuous.AMPAgent(**kwargs))
         runner.player_factory.register_builder('amp_continuous', lambda **kwargs: amp_players.AMPPlayerContinuous(**kwargs))
+        runner.player_factory.register_builder('pro_amp_continuous', lambda **kwargs: pro_amp_players.ProAMPPlayerContinuous(**kwargs))
         model_builder.register_model('continuous_amp', lambda network, **kwargs: amp_models.ModelAMPContinuous(network))
+        model_builder.register_model('pro_continuous_amp', lambda network, **kwargs: pro_amp_models.ProModelAMPContinuous(network))
         model_builder.register_network('amp', lambda **kwargs: amp_network_builder.AMPBuilder())
+        model_builder.register_network('pro_amp', lambda **kwargs: pro_amp_network_builder.ProAMPBuilder())
 
         return runner
 
