@@ -76,6 +76,7 @@ params:
   load_checkpoint: ${if:${...checkpoint},True,False} # flag which sets whether to load the checkpoint
 
   config:
+    load_path: checkpoints/walk_amp.pth
     name: ${resolve_default:HumanoidAMP,${....experiment}}
     full_experiment_name: ${.name}
     env_name: rlgpu

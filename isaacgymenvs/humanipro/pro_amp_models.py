@@ -36,8 +36,9 @@ class ProModelAMPContinuous(ModelAMPContinuous):
         super().__init__(network)
         return
 
-    def build(self, config):
-        net_h, net_p = self.network_builder.build('pro_amp', **config)
+    def build(self, config_h, config_p):
+        net_h = self.network_builder.build('model_h', **config_h)
+        net_p = self.network_builder.build('model_p', **config_p)
         print("network_h")
         for name, _ in net_h.named_parameters():
             print(name)
@@ -45,12 +46,17 @@ class ProModelAMPContinuous(ModelAMPContinuous):
         for name, _ in net_p.named_parameters():
             print(name)
 
-        obs_shape = config['input_shape']
-        normalize_value = config.get('normalize_value', False)
-        normalize_input = config.get('normalize_input', False)
-        value_size = config.get('value_size', 1)
+        obs_shape_h = config_h['input_shape']
+        normalize_value_h = config_h.get('normalize_value', False)
+        normalize_input_h = config_h.get('normalize_input', False)
+        value_size_h = config_h.get('value_size', 1)
 
-        return (self.Network(net_h, obs_shape=obs_shape,
-            normalize_value=normalize_value, normalize_input=normalize_input, value_size=value_size),
-                self.Network(net_p, obs_shape=obs_shape,
-            normalize_value=normalize_value, normalize_input=normalize_input, value_size=value_size))
+        obs_shape_p = config_p['input_shape']
+        normalize_value_p = config_p.get('normalize_value', False)
+        normalize_input_p = config_p.get('normalize_input', False)
+        value_size_p = config_p.get('value_size', 1)
+
+        return (self.Network(net_h, obs_shape=obs_shape_h,
+            normalize_value=normalize_value_h, normalize_input=normalize_input_h, value_size=value_size_h),
+                self.Network(net_p, obs_shape=obs_shape_p,
+            normalize_value=normalize_value_p, normalize_input=normalize_input_p, value_size=value_size_p))

@@ -91,6 +91,7 @@ def launch_rlg_hydra(cfg: DictConfig):
     from rl_games.torch_runner import Runner
     from rl_games.algos_torch import model_builder
     from isaacgymenvs.learning import amp_continuous
+    from isaacgymenvs.humanipro import pro_amp_continuous
     from isaacgymenvs.learning import amp_players
     from isaacgymenvs.humanipro import pro_amp_players
     from isaacgymenvs.learning import amp_models
@@ -186,6 +187,7 @@ def launch_rlg_hydra(cfg: DictConfig):
     def build_runner(algo_observer):
         runner = Runner(algo_observer)
         runner.algo_factory.register_builder('amp_continuous', lambda **kwargs: amp_continuous.AMPAgent(**kwargs))
+        runner.algo_factory.register_builder('pro_amp_continuous', lambda **kwargs: pro_amp_continuous.ProAMPAgent(**kwargs))
         runner.player_factory.register_builder('amp_continuous', lambda **kwargs: amp_players.AMPPlayerContinuous(**kwargs))
         runner.player_factory.register_builder('pro_amp_continuous', lambda **kwargs: pro_amp_players.ProAMPPlayerContinuous(**kwargs))
         model_builder.register_model('continuous_amp', lambda network, **kwargs: amp_models.ModelAMPContinuous(network))

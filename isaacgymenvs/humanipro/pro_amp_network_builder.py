@@ -44,6 +44,10 @@ class ProAMPBuilder(AMPBuilder):
         return
 
     def build(self, name, **kwargs):
-        net_h = ProAMPBuilder.Network(self.params['network_h'], **kwargs)
-        net_p = ProAMPBuilder.Network(self.params['network_p'], **kwargs)
-        return net_h, net_p
+        assert name in ['model_h', 'model_p'], 'wrong model!'
+        if name == "model_h":
+            net = AMPBuilder.Network(self.params['network_h'], **kwargs)
+            return net
+        elif name == "model_p":
+            net = AMPBuilder.Network(self.params['network_p'], **kwargs)
+            return net

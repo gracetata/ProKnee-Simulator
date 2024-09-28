@@ -31,21 +31,29 @@ import torch
 from rl_games.algos_torch import torch_ext
 from rl_games.algos_torch.running_mean_std import RunningMeanStd
 from isaacgymenvs.learning.amp_players import AMPPlayerContinuous
+from isaacgymenvs.humanipro.pro_common_player import ProCommonPlayer
 from rl_games.common.tr_helpers import unsqueeze_obs
 from rl_games.algos_torch.players import rescale_actions
 
 
-class ProAMPPlayerContinuous(AMPPlayerContinuous):
+class ProAMPPlayerContinuous(ProCommonPlayer):
 
     def __init__(self, params):
+        config = params['config']
+
+        self._normalize_amp_input = config.get('normalize_amp_input', True)
+        self._disc_reward_scale = config['disc_reward_scale']
+        self._print_disc_prediction = config.get('print_disc_prediction', False)
+
         super().__init__(params)
+
         self.states_h, self.states_p = None, None
         return
 
     def restore(self, fn):
         checkpoint = torch_ext.load_checkpoint(fn)
-        self.model_h.load_state_dict(checkpoint['model'])
-        self.model_p.load_state_dict(checkpoint['model'])
+        self.model_h.load_state_dict(checkpoint['model_h'])
+        self.model_p.load_state_dict(checkpoint['model_p'])
         if self.normalize_input and 'running_mean_std' in checkpoint:
             self.model_h.running_mean_std.load_state_dict(checkpoint['running_mean_std'])
             self.model_p.running_mean_std.load_state_dict(checkpoint['running_mean_std'])
@@ -59,22 +67,70 @@ class ProAMPPlayerContinuous(AMPPlayerContinuous):
             self._amp_input_mean_std.load_state_dict(checkpoint['amp_input_mean_std'])
         return
 
-    def _build_net(self, config):
-        self.model_h, self.model_p = self.network.build(config)
-        self.model_h.to(self.device)
-        self.model_p.to(self.device)
-        self.model_h.eval()
-        self.model_p.eval()
-        assert self.model_h.is_rnn() == self.model_p.is_rnn(), "human and prosthesis model's input must be same"
-        self.is_rnn = self.model_h.is_rnn()
+    def _build_net(self, config_h, config_p):
+        super()._build_net(config_h, config_p)
 
         if self._normalize_amp_input:
-            self._amp_input_mean_std = RunningMeanStd(config['amp_input_shape']).to(self.device)
+            self._amp_input_mean_std = RunningMeanStd(config_p['amp_input_shape']).to(self.device)
             self._amp_input_mean_std.eval()
         return
 
-    def get_action(self, obs_dict, is_deterministic=False):
-        obs = obs_dict['obs']
+    def _post_step(self, info):
+        super()._post_step(info)
+        if self._print_disc_prediction:
+            self._amp_debug(info)
+        return
+
+    def _build_net_config(self):
+        config_h, config_p = super()._build_net_config()
+        if (hasattr(self, 'env')):
+            config_h['amp_input_shape'] = self.env.amp_observation_space.shape
+            config_p['amp_input_shape'] = self.env.amp_observation_space.shape
+        else:
+            config_h['amp_input_shape'] = self.env_info['amp_observation_space']
+            config_p['amp_input_shape'] = self.env_info['amp_observation_space']
+
+        return config_h, config_p
+
+    def _amp_debug(self, info):
+        with torch.no_grad():
+            amp_obs = info['amp_obs']
+            amp_obs = amp_obs[0:1]
+            disc_pred = self._eval_disc(amp_obs.to(self.device))
+            amp_rewards = self._calc_amp_rewards(amp_obs.to(self.device))
+            disc_reward = amp_rewards['disc_rewards']
+
+            disc_pred = disc_pred.detach().cpu().numpy()[0, 0]
+            disc_reward = disc_reward.cpu().numpy()[0, 0]
+            print("disc_pred: ", disc_pred, disc_reward)
+        return
+
+    def _preproc_amp_obs(self, amp_obs):
+        if self._normalize_amp_input:
+            amp_obs = self._amp_input_mean_std(amp_obs)
+        return amp_obs
+
+    def _eval_disc(self, amp_obs):
+        proc_amp_obs = self._preproc_amp_obs(amp_obs)
+        return self.model.a2c_network.eval_disc(proc_amp_obs)
+
+    def _calc_amp_rewards(self, amp_obs):
+        disc_r = self._calc_disc_rewards(amp_obs)
+        output = {
+            'disc_rewards': disc_r
+        }
+        return output
+
+    def _calc_disc_rewards(self, amp_obs):
+        with torch.no_grad():
+            disc_logits = self._eval_disc(amp_obs)
+            prob = 1.0 / (1.0 + torch.exp(-disc_logits))
+            disc_r = -torch.log(torch.maximum(1 - prob, torch.tensor(0.0001, device=self.device)))
+            disc_r *= self._disc_reward_scale
+        return disc_r
+
+    def get_action(self, obs, is_deterministic = False):
+        obs = obs['obs']
         if self.has_batch_dimension == False:
             obs = unsqueeze_obs(obs)
         obs = self._preproc_obs(obs)
@@ -87,15 +143,15 @@ class ProAMPPlayerContinuous(AMPPlayerContinuous):
         action_h, action_p = res_dict_h['actions'], res_dict_p['actions']
         self.states_h, self.states_p = res_dict_h['rnn_states'], res_dict_p['rnn_states']
         if is_deterministic:
-            current_action_h, current_action_p = mu_h, mu_p
+            mu_h[:, -4:] = mu_p
+            current_action = mu_h
         else:
-            current_action_h, current_action_p = action_h, action_p
+            action_h[:, -4:] = action_p
+            current_action = action_h
         if self.has_batch_dimension == False:
-            current_action_h = torch.squeeze(current_action_h.detach())
-            current_action_p = torch.squeeze(current_action_p.detach())
+            current_action = torch.squeeze(current_action.detach())
 
-        # print(torch.sum(torch.abs(current_action_h - current_action_p)).item())
         if self.clip_actions:
-            return rescale_actions(self.actions_low, self.actions_high, torch.clamp(current_action_h, -1.0, 1.0))
+            return rescale_actions(self.actions_low, self.actions_high, torch.clamp(current_action, -1.0, 1.0))
         else:
-            return current_action_h
+            return current_action

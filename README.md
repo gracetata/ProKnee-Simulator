@@ -42,5 +42,6 @@ python train.py task=HumanoidAMP checkpoint=checkpoints/walk_amp.pth test=True n
 ## HumaniPro
 
 ```
-python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro checkpoint=checkpoints/walk_amp.pth
+python train.py task=HumanoidAMP train=HumanoidAMPPro wandb_activate=True
+python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro checkpoint=runs/HumanoidAMP_28-19-28-12/nn/HumanoidAMP_28-19-28-15_50.pth
 ```
