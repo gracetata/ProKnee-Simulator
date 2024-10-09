@@ -76,7 +76,7 @@ params:
   load_checkpoint: ${if:${...checkpoint},True,False} # flag which sets whether to load the checkpoint
 
   config:
-    load_path: checkpoints/walk_amp.pth
+    load_path: runs/HumanoidAMP_28-23-29-05/nn/HumanoidAMP_28-23-29-17_5000.pth
     name: ${resolve_default:HumanoidAMP,${....experiment}}
     full_experiment_name: ${.name}
     env_name: rlgpu
@@ -92,7 +92,7 @@ params:
     normalize_advantage: True
     gamma: 0.99
     tau: 0.95
-    learning_rate: 5e-5
+    learning_rate: 8.0e-08
     lr_schedule: constant
     kl_threshold: 0.008
     score_to_win: 20000

@@ -43,5 +43,8 @@ python train.py task=HumanoidAMP checkpoint=checkpoints/walk_amp.pth test=True n
 
 ```
 python train.py task=HumanoidAMP train=HumanoidAMPPro wandb_activate=True
-python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro checkpoint=runs/HumanoidAMP_28-19-28-12/nn/HumanoidAMP_28-19-28-15_50.pth
+python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro checkpoint=**.pth
 ```
+
+
+Due to the complex dynamics of multi-body games, modeling it as a single-agent system leads to gradient explosion, where a learning rate around 8e-8 can succeed, but increasing it results in failure.

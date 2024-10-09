@@ -419,6 +419,11 @@ class ProCommonAgent(a2c_continuous.A2CAgent):
             not_done = not_done.unsqueeze(1)
 
             delta = mb_rewards[t] + self.gamma * mb_next_values[t] - mb_values[t]
+            # print("mb_rewards[t]", mb_rewards[t])
+            # print("mb_next_values[t]", mb_next_values[t])
+            # print("mb_values[t]", mb_values[t])
+            # print("delta", delta)
+            # print("not_done", not_done)
             lastgaelam = delta + self.gamma * self.tau * not_done * lastgaelam
             mb_advs[t] = lastgaelam
 

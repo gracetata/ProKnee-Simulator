@@ -35,6 +35,7 @@ from rl_games.common import vecenv
 from isaacgymenvs.utils.torch_jit_utils import to_torch
 
 import time
+import json
 from datetime import datetime
 import numpy as np
 from torch import optim
@@ -591,3 +592,8 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
         state['model_h'] = self.model_h.state_dict()
         state['model_p'] = self.model_p.state_dict()
         return state
+
+    def set_weights(self, weights):
+        self.model_h.load_state_dict(weights['model_h'])
+        self.model_p.load_state_dict(weights['model_p'])
+        self.set_stats_weights(weights)
