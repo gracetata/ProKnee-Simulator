@@ -35,7 +35,6 @@ python train.py task=HumanoidAMP wandb_activate=True
 ## Test
 
 ```
-python train.py task=HumanoidAMP checkpoint=checkpoints/run_amp.pth test=True num_envs=1
 python train.py task=HumanoidAMP checkpoint=checkpoints/walk_amp.pth test=True num_envs=1
 ```
 
@@ -46,5 +45,6 @@ python train.py task=HumanoidAMP train=HumanoidAMPPro wandb_activate=True
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro checkpoint=**.pth
 ```
 
-
 Due to the complex dynamics of multi-body games, modeling it as a single-agent system leads to gradient explosion, where a learning rate around 8e-8 can succeed, but increasing it results in failure.
+
+I increase the fps of simulator, which dt become 1/180s from 1/60s.
