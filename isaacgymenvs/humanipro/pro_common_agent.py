@@ -67,6 +67,9 @@ class ProCommonAgent(a2c_continuous.A2CAgent):
         self._normalize_amp_input = config.get('normalize_amp_input', True)
 
         self.network_path = self.nn_dir
+
+        self.actions_num_h = self.actions_num
+        self.actions_num_p = 4 if self.config['mode'] == 'sarl' else self.actions_num
         
         net_config_h, net_config_p = self._build_net_config()
         self.model_h, self.model_p = self.network.build(net_config_h, net_config_p)
@@ -90,7 +93,7 @@ class ProCommonAgent(a2c_continuous.A2CAgent):
                 'num_agents' : self.num_agents, 
                 'num_steps' : self.horizon_length, 
                 'num_actors' : self.num_actors, 
-                'num_actions' : 4,
+                'num_actions' : self.actions_num_p,
                 'seq_len' : self.seq_len, 
                 'model' : self.central_value_config['network'],
                 'config' : self.central_value_config, 
@@ -103,7 +106,7 @@ class ProCommonAgent(a2c_continuous.A2CAgent):
         self.dataset = amp_datasets.AMPDataset(self.batch_size, self.minibatch_size, self.is_discrete, self.is_rnn, self.ppo_device, self.seq_len)
         self.algo_observer.after_init(self)
 
-        self.env_info['action_space'] = spaces.Box(low=-1.0, high=1.0, shape=(4,), dtype='float32')
+        self.env_info['action_space'] = spaces.Box(low=-1.0, high=1.0, shape=(self.actions_num_p,), dtype='float32')
         
         return
 
@@ -446,7 +449,7 @@ class ProCommonAgent(a2c_continuous.A2CAgent):
     def _build_net_config(self):
         obs_shape = torch_ext.shape_whc_to_cwh(self.obs_shape)
         config_h = {
-            'actions_num' : self.actions_num,
+            'actions_num' : self.actions_num_h,
             'input_shape' : obs_shape,
             'num_seqs' : self.num_actors * self.num_agents,
             'value_size': self.env_info.get('value_size', 1),
@@ -454,7 +457,7 @@ class ProCommonAgent(a2c_continuous.A2CAgent):
             'normalize_input': self.normalize_input,
         }
         config_p = {
-            'actions_num': 4,
+            'actions_num': self.actions_num_p,
             'input_shape': obs_shape,
             'num_seqs': self.num_actors * self.num_agents,
             'value_size': self.env_info.get('value_size', 1),

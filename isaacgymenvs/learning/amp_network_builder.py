@@ -64,6 +64,9 @@ class AMPBuilder(network_builder.A2CBuilder):
             self._disc_units = params['disc']['units']
             self._disc_activation = params['disc']['activation']
             self._disc_initializer = params['disc']['initializer']
+
+            for param in self.parameters():
+                param.requires_grad = False
             return
 
         def eval_critic(self, obs):

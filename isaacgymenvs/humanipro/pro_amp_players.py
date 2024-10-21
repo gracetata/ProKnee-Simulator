@@ -143,10 +143,10 @@ class ProAMPPlayerContinuous(ProCommonPlayer):
         action_h, action_p = res_dict_h['actions'], res_dict_p['actions']
         self.states_h, self.states_p = res_dict_h['rnn_states'], res_dict_p['rnn_states']
         if is_deterministic:
-            mu_h[:, -4:] = mu_p
+            mu_h[:, -4:] = mu_p[:, -4:]
             current_action = mu_h
         else:
-            action_h[:, -4:] = action_p
+            action_h[:, -4:] = action_p[:, -4:]
             current_action = action_h
         if self.has_batch_dimension == False:
             current_action = torch.squeeze(current_action.detach())

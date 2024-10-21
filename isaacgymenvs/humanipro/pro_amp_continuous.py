@@ -64,6 +64,8 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
     def init_tensors(self):
         super().init_tensors()
         self._build_amp_buffers()
+
+        self.tensor_list += ['next_values']
         return
     
     def set_eval(self):
@@ -108,7 +110,10 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
             res_dict_h, res_dict_p = self.get_action_values(self.obs)
 
             for k in update_list:
-                self.experience_buffer.update_data(k, n, res_dict_p[k])
+                if self.config['mode'] == 'sarl':
+                    self.experience_buffer.update_data(k, n, res_dict_p[k])
+                else:
+                    self.experience_buffer.update_data(k, n, res_dict_h[k])
 
             if self.has_central_value:
                 self.experience_buffer.update_data('states', n, self.obs['states'])
@@ -157,6 +162,11 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
 
         batch_dict = self.experience_buffer.get_transformed_list(a2c_common.swap_and_flatten01, self.tensor_list)
         batch_dict['returns'] = a2c_common.swap_and_flatten01(mb_returns)
+        print("mean value function:", torch.mean(mb_advs).item(),
+              torch.mean(mb_values).item(),
+              torch.mean(mb_fdones).item(),
+              torch.mean(mb_rewards).item(),
+              torch.mean(mb_next_values).item())
         batch_dict['played_frames'] = self.batch_size
 
         for k, v in amp_rewards.items():
@@ -169,6 +179,8 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
         self.dataset.values_dict['amp_obs'] = batch_dict['amp_obs']
         self.dataset.values_dict['amp_obs_demo'] = batch_dict['amp_obs_demo']
         self.dataset.values_dict['amp_obs_replay'] = batch_dict['amp_obs_replay']
+
+        self.dataset.values_dict['values'] = batch_dict['next_values']
         return
 
     def train_epoch(self):
@@ -572,11 +584,16 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
 
         with torch.no_grad():
             res_dict_h = self.model_h(input_dict)
+            input_dict['is_train'] = False
             res_dict_p = self.model_p(input_dict)
 
-            res_dict_h['actions'][:, -4:] = res_dict_p['actions']
-            res_dict_h['mus'][:, -4:] = res_dict_p['mus']
-            res_dict_h['sigmas'][:, -4:] = res_dict_p['sigmas']
+            res_dict_h['actions'][:, -4:] = res_dict_p['actions'][:, -4:]
+            res_dict_h['mus'][:, -4:] = res_dict_p['mus'][:, -4:]
+            res_dict_h['sigmas'][:, -4:] = res_dict_p['sigmas'][:, -4:]
+            res_dict_h['values'] = res_dict_p['values']
+            res_dict_h['neglogpacs'] = res_dict_p['neglogpacs']
+            res_dict_h['rnn_states'] = res_dict_p['rnn_states']
+
             if self.has_central_value:
                 states = obs['states']
                 input_dict = {

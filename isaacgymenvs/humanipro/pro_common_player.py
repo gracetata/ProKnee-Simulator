@@ -46,6 +46,9 @@ class ProCommonPlayer(players.PpoPlayerContinuous):
         
         self._setup_action_space()
         self.mask = [False]
+
+        self.actions_num_h = self.actions_num
+        self.actions_num_p = 4 if self.config['mode'] == 'sarl' else self.actions_num
         
         net_config_h, net_config_p = self._build_net_config()
         self._build_net(net_config_h, net_config_p)
@@ -187,7 +190,7 @@ class ProCommonPlayer(players.PpoPlayerContinuous):
     def _build_net_config(self):
         obs_shape = torch_ext.shape_whc_to_cwh(self.obs_shape)
         config_h = {
-            'actions_num' : self.actions_num,
+            'actions_num' : self.actions_num_h,
             'input_shape' : obs_shape,
             'num_seqs' : self.num_agents,
             'value_size': self.env_info.get('value_size', 1),
@@ -195,7 +198,7 @@ class ProCommonPlayer(players.PpoPlayerContinuous):
             'normalize_input': self.normalize_input,
         }
         config_p = {
-            'actions_num': 4,
+            'actions_num': self.actions_num_p,
             'input_shape': obs_shape,
             'num_seqs': self.num_agents,
             'value_size': self.env_info.get('value_size', 1),
