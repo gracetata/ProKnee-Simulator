@@ -19,7 +19,11 @@ install instructions if you have any trouble running the samples.
 pip install -r requirements.txt
 ```
 
-## Train
+FPS: 1/180s for all task.
+
+## Human Model
+
+### Train
 
 ```
 python train.py task=HumanoidAMP
@@ -32,7 +36,7 @@ wandb login
 python train.py task=HumanoidAMP wandb_activate=True
 ```
 
-## Test
+### Test
 
 ```
 python train.py task=HumanoidAMP checkpoint=checkpoints/walk_amp.pth test=True num_envs=1
@@ -40,16 +44,37 @@ python train.py task=HumanoidAMP checkpoint=checkpoints/walk_amp.pth test=True n
 
 ## HumaniPro
 
+### Single-Agent RL (SARL, PPO)
+
+$\hat{A}(s.a) = \hat{A}^p_{\text{GAE}}(s, a^p).$ 
+
 ```
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=sarl wandb_activate=True
-python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl wandb_activate=True
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=**.pth
+```
+
+Results:
+- Bad result (Walk, lr = $8.0 \times 10^{-8}$)
+```
+python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_29-22-25-42/nn/HumanoidAMP_29-22-25-55_5000.pth
+```
+- Good result (Walk, lr = $5.0 \times 10^{-5}$)
+```
+python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_21-17-21-51/nn/HumanoidAMP_21-17-22-02_150.pth
+```
+
+### Multi-Agent RL (MARL, ours)
+
+$\hat{A}(s.a) = \hat{A}_{\text{GAE}}(s, a)$.
+
+```
+python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl wandb_activate=True
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=**.pth
 ```
 
-1. `--mode=sarl`: $\hat{A}(s.a) = \hat{A}^p_{\text{GAE}}(s, a^p).$ 
-   1. `checkpoint=runs/HumanoidAMP_29-22-25-42/nn/HumanoidAMP_29-22-25-55_5000.pth` lr = 8.0e-08
-   2. `python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_21-17-21-51/nn/HumanoidAMP_21-17-22-02_150.pth`
-2. `--mode=marl`: $\hat{A}(s.a) = \hat{A}_{\text{GAE}}(s, a)$.
-   1. `python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=runs/HumanoidAMP_21-17-22-07/nn/HumanoidAMP_21-17-22-17_150.pth`
+Results:
+- Good result (Walk, lr = $5.0 \times 10^{-5}$)
+```
+python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=runs/HumanoidAMP_21-17-22-07/nn/HumanoidAMP_21-17-22-17_150.pth
+```
 
