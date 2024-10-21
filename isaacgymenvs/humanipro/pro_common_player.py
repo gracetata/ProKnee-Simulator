@@ -110,7 +110,7 @@ class ProCommonPlayer(players.PpoPlayerContinuous):
                 #     torque = 0
                 #     if "torque" in info:
                 #         torque = info['torque'].cpu().numpy().tolist()
-                #     f.write("{},{}\n".format(agent_obs[45], torque[24]))
+                #     f.write("{},{}\n".format(agent_obs[58], torque[24]))
   
                 self._post_step(info)
 

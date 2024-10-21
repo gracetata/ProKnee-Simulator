@@ -49,7 +49,7 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 
 1. `--mode=sarl`: $\hat{A}(s.a) = \hat{A}^p_{\text{GAE}}(s, a^p).$ 
    1. `checkpoint=runs/HumanoidAMP_29-22-25-42/nn/HumanoidAMP_29-22-25-55_5000.pth` lr = 8.0e-08
-   2. `python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_21-17-21-51/nn/HumanoidAMP_21-17-21-51_150.pth`
+   2. `python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_21-17-21-51/nn/HumanoidAMP_21-17-22-02_150.pth`
 2. `--mode=marl`: $\hat{A}(s.a) = \hat{A}_{\text{GAE}}(s, a)$.
    1. `python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=runs/HumanoidAMP_21-17-22-07/nn/HumanoidAMP_21-17-22-17_150.pth`
 
