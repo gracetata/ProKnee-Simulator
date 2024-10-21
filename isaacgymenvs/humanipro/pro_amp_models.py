@@ -77,8 +77,8 @@ class ProModelAMPContinuous(ModelAMPContinuous):
             sigma = torch.exp(logstd)
             distr = torch.distributions.Normal(mu, sigma, validate_args=False)
             if is_train:
-                entropy = distr.entropy().sum(dim=-1)
-                prev_neglogp = self.neglogp(prev_actions, mu, sigma, logstd)
+                entropy = distr.entropy()[:, -4:].sum(dim=-1)
+                prev_neglogp = self.neglogp(prev_actions[:, -4:], mu[:, -4:], sigma[:, -4:], logstd[:, -4:])
                 result = {
                     'prev_neglogp': torch.squeeze(prev_neglogp),
                     'values': value,
@@ -102,7 +102,7 @@ class ProModelAMPContinuous(ModelAMPContinuous):
                 return result
             else:
                 selected_action = distr.sample()
-                neglogp = self.neglogp(selected_action, mu, sigma, logstd)
+                neglogp = self.neglogp(selected_action[:, -4:], mu[:, -4:], sigma[:, -4:], logstd[:, -4:])
                 result = {
                     'neglogpacs': torch.squeeze(neglogp),
                     'values': self.unnorm_value(value),

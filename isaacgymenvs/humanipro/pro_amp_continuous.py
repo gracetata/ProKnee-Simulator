@@ -34,6 +34,7 @@ from rl_games.common import vecenv
 
 from isaacgymenvs.utils.torch_jit_utils import to_torch
 
+import copy
 import time
 import json
 from datetime import datetime
@@ -267,8 +268,8 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
         value_preds_batch = input_dict['old_values']
         old_action_log_probs_batch = input_dict['old_logp_actions']
         advantage = input_dict['advantages']
-        old_mu_batch = input_dict['mu']
-        old_sigma_batch = input_dict['sigma']
+        old_mu_batch = input_dict['mu'][:, -4:]
+        old_sigma_batch = input_dict['sigma'][:, -4:]
         return_batch = input_dict['returns']
         actions_batch = input_dict['actions']
         obs_batch = input_dict['obs']
@@ -308,8 +309,8 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
             action_log_probs = res_dict['prev_neglogp']
             values = res_dict['values']
             entropy = res_dict['entropy']
-            mu = res_dict['mus']
-            sigma = res_dict['sigmas']
+            mu = res_dict['mus'][:, -4:]
+            sigma = res_dict['sigmas'][:, -4:]
             disc_agent_logit = res_dict['disc_agent_logit']
             disc_agent_replay_logit = res_dict['disc_agent_replay_logit']
             disc_demo_logit = res_dict['disc_demo_logit']
@@ -583,9 +584,8 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
         }
 
         with torch.no_grad():
-            res_dict_h = self.model_h(input_dict)
-            input_dict['is_train'] = False
-            res_dict_p = self.model_p(input_dict)
+            res_dict_h = self.model_h(copy.deepcopy(input_dict))
+            res_dict_p = self.model_p(copy.deepcopy(input_dict))
 
             res_dict_h['actions'][:, -4:] = res_dict_p['actions'][:, -4:]
             res_dict_h['mus'][:, -4:] = res_dict_p['mus'][:, -4:]

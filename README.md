@@ -47,15 +47,9 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=**.pth
 ```
 
-Due to the complex dynamics of multi-body games, modeling it as a single-agent system leads to gradient explosion, where a learning rate around 8e-8 can succeed, but increasing it results in failure.
-
-I increase the fps of simulator, which dt become 1/180s from 1/60s.
-
-怀疑是此处的PPO代码在计算target_value时使用了当前的critic网络来计算batch中state的value， 因此导致值估计越推越高；
-将代码改为在replay buffer中存入记录的同时存入state的值估计，而不是在计算target_value时计算state的值估计.
-
 1. `--mode=sarl`: $\hat{A}(s.a) = \hat{A}^p_{\text{GAE}}(s, a^p).$ 
    1. `checkpoint=runs/HumanoidAMP_29-22-25-42/nn/HumanoidAMP_29-22-25-55_5000.pth` lr = 8.0e-08
-   2. `21-00-00-30` lr = 8.0e-8
+   2. `python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_21-17-21-51/nn/HumanoidAMP_21-17-21-51_150.pth`
 2. `--mode=marl`: $\hat{A}(s.a) = \hat{A}_{\text{GAE}}(s, a)$.
-   1. `21-00-01-37` lr = 8.0e-8
+   1. `python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=runs/HumanoidAMP_21-17-22-07/nn/HumanoidAMP_21-17-22-17_150.pth`
+

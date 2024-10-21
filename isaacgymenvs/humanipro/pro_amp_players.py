@@ -28,6 +28,7 @@
 
 import torch 
 
+import copy
 from rl_games.algos_torch import torch_ext
 from rl_games.algos_torch.running_mean_std import RunningMeanStd
 from isaacgymenvs.learning.amp_players import AMPPlayerContinuous
@@ -134,8 +135,8 @@ class ProAMPPlayerContinuous(ProCommonPlayer):
         if self.has_batch_dimension == False:
             obs = unsqueeze_obs(obs)
         obs = self._preproc_obs(obs)
-        input_dict_h = {'is_train': False, 'prev_actions': None, 'obs': obs, 'rnn_states': self.states_h}
-        input_dict_p = {'is_train': False, 'prev_actions': None, 'obs': obs, 'rnn_states': self.states_p}
+        input_dict_h = {'is_train': False, 'prev_actions': None, 'obs': copy.deepcopy(obs), 'rnn_states': self.states_h}
+        input_dict_p = {'is_train': False, 'prev_actions': None, 'obs': copy.deepcopy(obs), 'rnn_states': self.states_p}
         with torch.no_grad():
             res_dict_h = self.model_h(input_dict_h)
             res_dict_p = self.model_p(input_dict_p)
