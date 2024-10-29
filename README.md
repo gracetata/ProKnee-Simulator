@@ -23,7 +23,45 @@ FPS: 1/180s for all task.
 
 ## Human Model
 
+### Human model data preparation
+
+It only needs to consider this section when adding new motions. Otherwise, the warning about the lack of FBX does not have any real impact.
+
+You can get all [CMU Mocap dataset](http://mocap.cs.cmu.edu/resources.php) in FBX format from [here](https://data.4tu.nl/datasets/0448aab2-3332-449f-a8e2-d208cb58c7df). Different T-Pose comes from [here](https://github.com/anishhdiwan/near/tree/main/isaacgymenvs/tasks/amp/poselib/data).
+
+First, install FBX Python SDK.
+
+```
+conda create -n newhm python==3.10
+conda activate newhm
+wget https://damassets.autodesk.net/content/dam/autodesk/www/files/fbx202037_fbxpythonsdk_linux.tar.gz
+tar -xzvf fbx202037_fbxpythonsdk_linux.tar.gz 
+chmod ugo+x fbx202037_fbxpythonsdk_linux
+sudo mkdir /usr/fbx202037_fbxpythonsdk_linux
+sudo ./fbx202037_fbxpythonsdk_linux /usr/fbx202037_fbxpythonsdk_linux
+cd /usr/fbx202037_fbxpythonsdk_linux
+pip install fbx-2020.3.7-cp310-cp310-manylinux1_x86_64.whl
+cd ~/source/HumaniPro
+pip install -r reqirements_hm.txt 
+```
+
+Second, download your data and put it into `isaacgymenvs/tasks/amp/poselib/data`. 
+Change filename in `isaacgymenvs/tasks/amp/poselib/fbx_importer.py`
+
+Then
+
+```
+cd isaacgymenvs/tasks/amp/poselib/
+PYTHONPATH=/home/haofei/source/HumaniPro/ python fbx_importer.py
+PYTHONPATH=/home/haofei/source/HumaniPro/ python retarget_motion.py 
+cd ../../../../
+```
+
+We attempt to add 14.06
+
 ### Train
+
+For task `walk`, `run`, `dance`, we use `train=HumanoidAMPPO`
 
 ```
 python train.py task=HumanoidAMP
