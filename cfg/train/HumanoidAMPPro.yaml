@@ -77,6 +77,7 @@ params:
 
   config:
     mode: ${....mode}
+    hmp: ${....hmp}
     load_path: checkpoints/walk_amp.pth
     name: ${resolve_default:HumanoidAMP,${....experiment}}
     full_experiment_name: ${.name}

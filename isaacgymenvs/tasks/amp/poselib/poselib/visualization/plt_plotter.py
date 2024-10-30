@@ -236,7 +236,7 @@ class Matplotlib3DPlotter(BasePlotter):
     _update_impl_callables: Dict[str, Callable]
 
     def __init__(self, task: "BasePlotterTask") -> None:
-        self._fig = plt.figure()
+        self._fig = plt.figure(figsize=(10, 10))
         # self._ax = p3.Axes3D(self._fig)
         self._ax = self._fig.add_subplot(111, projection="3d")
         self._artist_cache = {}

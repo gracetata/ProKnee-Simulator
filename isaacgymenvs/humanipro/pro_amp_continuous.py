@@ -315,6 +315,9 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
             disc_agent_replay_logit = res_dict['disc_agent_replay_logit']
             disc_demo_logit = res_dict['disc_demo_logit']
 
+            res_dict_h = self.model_h(batch_dict)
+            disc_agent_logit_gt = res_dict_h['disc_agent_logit']
+
             a_info = self._actor_loss(old_action_log_probs_batch, action_log_probs, advantage, curr_e_clip)
             a_loss = a_info['actor_loss']
 
@@ -329,6 +332,7 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
             disc_agent_cat_logit = torch.cat([disc_agent_logit, disc_agent_replay_logit], dim=0)
             disc_info = self._disc_loss(disc_agent_cat_logit, disc_demo_logit, amp_obs_demo)
             disc_loss = disc_info['disc_loss']
+            disc_info['disc_agent_logit_gt'] = disc_agent_logit_gt
 
             loss = a_loss + self.critic_coef * c_loss - self.entropy_coef * entropy + self.bounds_loss_coef * b_loss \
                  + self._disc_coef * disc_loss
@@ -380,8 +384,15 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
     def _load_config_params(self, config):
         super()._load_config_params(config)
         
-        self._task_reward_w = config['task_reward_w']
-        self._disc_reward_w = config['disc_reward_w']
+        if self.config['hmp']:
+            self._task_reward_w = config['task_reward_w']
+            self._disc_reward_w = config['disc_reward_w']
+        else:
+            self._task_reward_w = 1.0
+            self._disc_reward_w = 0.0
+
+        if config['mode'] == 'oracle':
+            self.critic_coef = 0
 
         self._amp_observation_space = self.env_info['amp_observation_space']
         self._amp_batch_size = int(config['amp_batch_size'])
@@ -553,6 +564,8 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
         self.writer.add_scalar('info/disc_demo_logit', torch_ext.mean_list(train_info['disc_demo_logit']).item(), frame)
         self.writer.add_scalar('info/disc_grad_penalty', torch_ext.mean_list(train_info['disc_grad_penalty']).item(), frame)
         self.writer.add_scalar('info/disc_logit_loss', torch_ext.mean_list(train_info['disc_logit_loss']).item(), frame)
+
+        self.writer.add_scalar('info/disc_agent_logit_gt', torch_ext.mean_list(train_info['disc_agent_logit_gt']).item(), frame)
 
         disc_reward_std, disc_reward_mean = torch.std_mean(train_info['disc_rewards'])
         self.writer.add_scalar('info/disc_reward_mean', disc_reward_mean.item(), frame)

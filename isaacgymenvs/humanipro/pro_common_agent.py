@@ -560,3 +560,14 @@ class ProCommonAgent(a2c_continuous.A2CAgent):
             self._amp_input_mean_std = RunningMeanStd(config_h['amp_input_shape']).to(self.device)
             self._amp_input_mean_std.eval()
             self._amp_input_mean_std.load_state_dict(checkpoint['amp_input_mean_std'])
+
+        if self.config['mode'] == 'oracle':
+            critic_weights = {
+                'a2c_network.critic_mlp.0.weight': self.model_h.state_dict()['a2c_network.critic_mlp.0.weight'],
+                'a2c_network.critic_mlp.0.bias': self.model_h.state_dict()['a2c_network.critic_mlp.0.bias'],
+                'a2c_network.critic_mlp.2.weight': self.model_h.state_dict()['a2c_network.critic_mlp.2.weight'],
+                'a2c_network.critic_mlp.2.bias': self.model_h.state_dict()['a2c_network.critic_mlp.2.bias'],
+                'a2c_network.value.weight': self.model_h.state_dict()['a2c_network.value.weight'],
+                'a2c_network.value.bias': self.model_h.state_dict()['a2c_network.value.bias'],
+            }
+            self.model_p.load_state_dict(critic_weights, strict=False)
