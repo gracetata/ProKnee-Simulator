@@ -96,7 +96,7 @@ $\hat{A}(s.a) = \hat{A}^p_{\text{GAE}}(s, a^p).$
 
 ```
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=sarl wandb_activate=True
-python train.py task=HumanoidAMP train=HumanoidAMPPro mode=sarl wandb_activate=True mhp=false
+python train.py task=HumanoidAMP train=HumanoidAMPPro mode=sarl hmp=false wandb_activate=True
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=**.pth
 ```
 
@@ -116,7 +116,7 @@ $\hat{A}(s.a) = \hat{A}_{\text{GAE}}(s, a)$.
 
 ```
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl wandb_activate=True
-python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl wandb_activate=True mhp=false
+python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl hmp=false wandb_activate=True 
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=**.pth
 ```
 
@@ -126,7 +126,7 @@ $\hat{A}(s.a) = A(s, a)$.
 
 ```
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=oracle wandb_activate=True
-python train.py task=HumanoidAMP train=HumanoidAMPPro mode=oracle wandb_activate=True mhp=false
+python train.py task=HumanoidAMP train=HumanoidAMPPro mode=oracle hmp=false wandb_activate=True
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=oracle checkpoint=**.pth
 ```
 
@@ -141,41 +141,41 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 ### Storage
 
 
-|                    | walk                    | run                     | dance                   | gym | some action |
-| ------------------ | ----------------------- | ----------------------- | ----------------------- | --- | ----------- |
-| AMP                | HumanoidAMP_28-23-29-05 | HumanoidAMP_21-23-21-08 | HumanoidAMP_21-23-22-12 |     |             |
-| PPO                |                         |                         |                         |     |             |
-| PPO w. hmp         |                         |                         |                         |     |             |
-| ours               |                         |                         |                         |     |             |
-| ours w. hmp        |                         |                         |                         |     |             |
-| ours-oracle        |                         |                         |                         |     |             |
-| ours-oracle w. hmp |                         |                         |                         |     |             |
-| train file         | PPO                     | PPO                     | PPO                     | PPO |             |
+|                    | walk                    | run                     | dance                   | gym                     | some action |
+|--------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------|
+| AMP                | HumanoidAMP_28-23-29-05 | HumanoidAMP_21-23-21-08 | HumanoidAMP_21-23-22-12 | HumanoidAMP_30-01-16-44 |             |
+| PPO                |                         |                         |                         |                         |             |
+| PPO w. hmp         |                         |                         |                         |                         |             |
+| ours               |                         |                         |                         |                         |             |
+| ours w. hmp        |                         |                         |                         |                         |             |
+| ours-oracle        |                         |                         |                         |                         |             |
+| ours-oracle w. hmp |                         |                         |                         |                         |             |
+| train file         | PPO                     | PPO                     | PPO                     | PPO                     |             |
 
 ### Episode Length
 
 
-|                    | walk  | run   | dance | gym | some action |
-| ------------------ | ----- | ----- | ----- | --- | ----------- |
-| AMP                | 0.992 | 0.988 | 0.955 |     |             |
-| PPO                |       |       |       |     |             |
-| PPO w. hmp         |       |       |       |     |             |
-| ours               |       |       |       |     |             |
-| ours w. hmp        |       |       |       |     |             |
-| ours-oracle        |       |       |       |     |             |
-| ours-oracle w. hmp |       |       |       |     |             |
-| train file         |       |       |       |     |             |
+|                    | walk  | run   | dance | gym   | some action |
+| ------------------ | ----- | ----- | ----- |-------| ----------- |
+| AMP                | 0.992 | 0.988 | 0.955 | 0.920 |             |
+| PPO                |       |       |       |       |             |
+| PPO w. hmp         |       |       |       |       |             |
+| ours               |       |       |       |       |             |
+| ours w. hmp        |       |       |       |       |             |
+| ours-oracle        |       |       |       |       |             |
+| ours-oracle w. hmp |       |       |       |       |             |
+| train file         |       |       |       |       |             |
 
 ### Average discrimination logits for agent
 
 
-|                    | walk   | run    | dance  | gym | some action |
-| ------------------ | ------ | ------ | ------ | --- | ----------- |
-| AMP                | -1.385 | -1.610 | -0.676 |     |             |
-| PPO                |        |        |        |     |             |
-| PPO w. hmp         |        |        |        |     |             |
-| ours               |        |        |        |     |             |
-| ours w. hmp        |        |        |        |     |             |
-| ours-oracle        |        |        |        |     |             |
-| ours-oracle w. hmp |        |        |        |     |             |
-| train file         |        |        |        |     |             |
+|                    | walk   | run    | dance  | gym    | some action |
+| ------------------ | ------ | ------ | ------ |--------| ----------- |
+| AMP                | -1.385 | -1.610 | -0.676 | -0.534 |             |
+| PPO                |        |        |        |        |             |
+| PPO w. hmp         |        |        |        |        |             |
+| ours               |        |        |        |        |             |
+| ours w. hmp        |        |        |        |        |             |
+| ours-oracle        |        |        |        |        |             |
+| ours-oracle w. hmp |        |        |        |        |             |
+| train file         |        |        |        |        |             |

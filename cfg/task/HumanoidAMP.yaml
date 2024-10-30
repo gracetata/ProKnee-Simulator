@@ -25,6 +25,7 @@ env:
 
   # animation files to learn from
   # these motions should use hyperparameters from HumanoidAMPPPO.yaml
+  motion_file: "amp_humanoid_${...motion}.npy"
   #motion_file: "amp_humanoid_walk.npy"
   #motion_file: "amp_humanoid_run.npy"
   #motion_file: "amp_humanoid_dance.npy"
@@ -34,7 +35,7 @@ env:
   #motion_file: "amp_humanoid_backflip.npy"
 
   # these motions are added
-  motion_file: "amp_humanoid_gym.npy"
+  #motion_file: "amp_humanoid_gym.npy"
 
   asset:
     assetFileName: "mjcf/amp_humanoid.xml"

@@ -564,7 +564,6 @@ class ProAMPAgent(pro_common_agent.ProCommonAgent):
         self.writer.add_scalar('info/disc_demo_logit', torch_ext.mean_list(train_info['disc_demo_logit']).item(), frame)
         self.writer.add_scalar('info/disc_grad_penalty', torch_ext.mean_list(train_info['disc_grad_penalty']).item(), frame)
         self.writer.add_scalar('info/disc_logit_loss', torch_ext.mean_list(train_info['disc_logit_loss']).item(), frame)
-
         self.writer.add_scalar('info/disc_agent_logit_gt', torch_ext.mean_list(train_info['disc_agent_logit_gt']).item(), frame)
 
         disc_reward_std, disc_reward_mean = torch.std_mean(train_info['disc_rewards'])
