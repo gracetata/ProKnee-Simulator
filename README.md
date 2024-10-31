@@ -120,7 +120,13 @@ python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl hmp=false wandb_
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=**.pth
 ```
 
-### Multi-Agent RL with Oracle (MARL-oracle, ours-oracle)
+<!--Results:
+- Good result (Walk, lr = $5.0 \times 10^{-5}$)
+```
+python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=runs/HumanoidAMP_21-17-22-07/nn/HumanoidAMP_21-17-22-17_150.pth
+```-->
+
+<!--### Multi-Agent RL with Oracle (MARL-oracle, ours-oracle)
 
 $\hat{A}(s.a) = A(s, a)$.
 
@@ -128,12 +134,6 @@ $\hat{A}(s.a) = A(s, a)$.
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=oracle wandb_activate=True
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=oracle hmp=false wandb_activate=True
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=oracle checkpoint=**.pth
-```
-
-<!--Results:
-- Good result (Walk, lr = $5.0 \times 10^{-5}$)
-```
-python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=runs/HumanoidAMP_21-17-22-07/nn/HumanoidAMP_21-17-22-17_150.pth
 ```-->
 
 ## Result
@@ -141,41 +141,33 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 ### Storage
 
 
-|                    | walk                    | run                     | dance                   | gym                     | some action |
-|--------------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------|
-| AMP                | HumanoidAMP_28-23-29-05 | HumanoidAMP_21-23-21-08 | HumanoidAMP_21-23-22-12 | HumanoidAMP_30-01-16-44 |             |
-| PPO                |                         |                         |                         |                         |             |
-| PPO w. hmp         |                         |                         |                         |                         |             |
-| ours               |                         |                         |                         |                         |             |
-| ours w. hmp        |                         |                         |                         |                         |             |
-| ours-oracle        |                         |                         |                         |                         |             |
-| ours-oracle w. hmp |                         |                         |                         |                         |             |
-| train file         | PPO                     | PPO                     | PPO                     | PPO                     |             |
+|             | walk                    | run                     | dance                   | gym                     | some action |
+|-------------|-------------------------|-------------------------|-------------------------|-------------------------|-------------|
+| AMP         | HumanoidAMP_28-23-29-05 | HumanoidAMP_21-23-21-08 | HumanoidAMP_21-23-22-12 | HumanoidAMP_30-01-16-44 |             |
+| PPO         | HumanoidAMP_30-22-58-00 | HumanoidAMP_31-04-21-55 | HumanoidAMP_31-09-46-34 |                         |             |
+| PPO w. hmp  | HumanoidAMP_30-22-57-19 | HumanoidAMP_31-04-21-22 | HumanoidAMP_31-09-45-40 |                         |             |
+| ours        | HumanoidAMP_31-00-46-11 | HumanoidAMP_31-06-10-00 |                         |                         |             |
+| ours w. hmp | HumanoidAMP_31-00-45-40 | HumanoidAMP_31-06-09-24 |                         |                         |             |
+| train file  | PPO                     | PPO                     | PPO                     | PPO                     |             |
 
 ### Episode Length
 
 
-|                    | walk  | run   | dance | gym   | some action |
-| ------------------ | ----- | ----- | ----- |-------| ----------- |
-| AMP                | 0.992 | 0.988 | 0.955 | 0.920 |             |
-| PPO                |       |       |       |       |             |
-| PPO w. hmp         |       |       |       |       |             |
-| ours               |       |       |       |       |             |
-| ours w. hmp        |       |       |       |       |             |
-| ours-oracle        |       |       |       |       |             |
-| ours-oracle w. hmp |       |       |       |       |             |
-| train file         |       |       |       |       |             |
+|             | walk      | run       | dance | gym   | some action |
+|-------------|-----------|-----------|-------|-------|-------------|
+| AMP         | 0.992     | 0.988     | 0.955 | 0.920 |             |
+| SARL        | 0.920     | 0.936     |       |       |             |
+| SARL w. hmp | **0.945** | 0.878     |       |       |             |
+| MARL        | 0.933     | 0.877     |       |       |             |
+| MARL w. hmp | 0.910     | **0.939** |       |       |             |
 
 ### Average discrimination logits for agent
 
 
-|                    | walk   | run    | dance  | gym    | some action |
-| ------------------ | ------ | ------ | ------ |--------| ----------- |
-| AMP                | -1.385 | -1.610 | -0.676 | -0.534 |             |
-| PPO                |        |        |        |        |             |
-| PPO w. hmp         |        |        |        |        |             |
-| ours               |        |        |        |        |             |
-| ours w. hmp        |        |        |        |        |             |
-| ours-oracle        |        |        |        |        |             |
-| ours-oracle w. hmp |        |        |        |        |             |
-| train file         |        |        |        |        |             |
+|             | walk       | run        | dance  | gym    | some action |
+|-------------|------------|------------|--------|--------|-------------|
+| AMP         | -1.385     | -1.610     | -0.676 | -0.534 |             |
+| SARL        | -1.630     | -2.060     |        |        |             |
+| SARL w. hmp | -1.410     | **-1.717** |        |        |             |
+| MARL        | -1.648     | -2.123     |        |        |             |
+| MARL w. hmp | **-1.358** | -1.721     |        |        |             |
