@@ -139,6 +139,11 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 ## Result
 
 ### Experiment 1 (20241031)
+
+#### Params
+
+max_epochs: 500
+
 #### Storage
 
 
@@ -172,3 +177,9 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 | SARL w. hmp | -1.410     | **-1.717** | −0.600 | -0.505     |
 | MARL        | -1.648     | -2.123     | −0.662 | -0.652     |
 | MARL w. hmp | **-1.358** | -1.721     | −0.595 | **-0.464** |
+
+### Experiment 1 (20241103)
+
+#### Params
+
+max_epochs: 1000
