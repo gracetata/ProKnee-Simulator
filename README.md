@@ -178,8 +178,17 @@ max_epochs: 500
 | MARL        | -1.648     | -2.123     | −0.662 | -0.652     |
 | MARL w. hmp | **-1.358** | -1.721     | −0.595 | **-0.464** |
 
-### Experiment 1 (20241103)
+### Experiment 1 (20241113)
 
 #### Params
 
 max_epochs: 1000
+
+#### Storage
+
+|            | walk                    | run                     | dance                   | gym                     | 
+|------------|-------------------------|-------------------------|-------------------------|-------------------------|
+| AMP        | HumanoidAMP_28-23-29-05 | HumanoidAMP_21-23-21-08 | HumanoidAMP_21-23-22-12 | HumanoidAMP_30-01-16-44 |
+| PPO        |                         |                         |                         |                         |
+| PPO w. hmp |                         |                         |                         |                         |
+| train file | PPO                     | PPO                     | PPO                     | PPO                     |

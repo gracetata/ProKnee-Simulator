@@ -193,6 +193,7 @@ class HumanoidAMPBase(VecTask):
         right_foot_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "right_foot")
         left_foot_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "left_foot")
         left_shin_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "left_shin")
+        left_thigh_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "left_thigh")
         sensor_pose = gymapi.Transform()
 
         self.gym.create_asset_force_sensor(humanoid_asset, right_foot_idx, sensor_pose)
@@ -229,7 +230,7 @@ class HumanoidAMPBase(VecTask):
             self.gym.enable_actor_dof_force_sensors(env_ptr, handle)
 
             for j in range(self.num_bodies):
-                if j in [left_shin_idx, left_foot_idx]:
+                if j in [left_shin_idx, left_thigh_idx, left_foot_idx]:
                     self.gym.set_rigid_body_color(
                         env_ptr, handle, j, gymapi.MESH_VISUAL, gymapi.Vec3(1, 0, 0))
                 else:
