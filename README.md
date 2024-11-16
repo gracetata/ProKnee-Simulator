@@ -64,20 +64,20 @@ We attempt to add 14.06
 For task `walk`, `run`, `dance`, we use `train=HumanoidAMPPO`
 
 ```
-python train.py task=HumanoidAMP
+python train.py task=HumanoidAMP motion=walk
 ```
 
 Register for [wandb](https://wandb.ai) and create a project named isaacgymenvs in wandb. Then, you can visualize the training process in the cloud using the following parameters.
 
 ```
 wandb login
-python train.py task=HumanoidAMP wandb_activate=True
+python train.py task=HumanoidAMP wandb_activate=True motion=walk
 ```
 
 ### Test
 
 ```
-python train.py task=HumanoidAMP checkpoint=checkpoints/walk_amp.pth test=True num_envs=1
+python train.py task=HumanoidAMP checkpoint=checkpoints/walk_amp.pth test=True num_envs=1 motion=walk
 ```
 
 ## HumaniPro
@@ -90,7 +90,13 @@ With Human Motion Poior, reward function is $r = - log(1 - \frac{1}{1+e^{-D(s_t,
 
 Without Human Motion Poior, reward function is $r = 1$.
 
-### Single-Agent RL (SARL, PPO)
+```
+python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl wandb_activate=True motion=walk
+python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl hmp=false wandb_activate=True motion=walk
+python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=**.pth motion=walk
+```
+
+<!--### Single-Agent RL (SARL, PPO)
 
 $\hat{A}(s.a) = \hat{A}^p_{\text{GAE}}(s, a^p).$
 
@@ -100,7 +106,7 @@ python train.py task=HumanoidAMP train=HumanoidAMPPro mode=sarl hmp=false wandb_
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=**.pth
 ```
 
-<!--Results:
+Results:
 - Bad result (Walk, lr = $8.0 \times 10^{-8}$)
 ```
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_29-22-25-42/nn/HumanoidAMP_29-22-25-55_5000.pth
@@ -110,7 +116,7 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=sarl checkpoint=runs/HumanoidAMP_21-17-21-51/nn/HumanoidAMP_21-17-22-02_150.pth
 ```-->
 
-### Multi-Agent RL (MARL, ours)
+<!----### Multi-Agent RL (MARL, ours)
 
 $\hat{A}(s.a) = \hat{A}_{\text{GAE}}(s, a)$.
 
@@ -184,6 +190,8 @@ max_epochs: 500
 
 max_epochs: 1000
 
+dt: 0.00556 # 1/180 s
+
 #### Storage
 
 |            | walk                    | run                     | dance                   | gym                     | 
@@ -200,8 +208,6 @@ max_epochs: 1000
 max_epochs: 1500
 
 dt: 0.0166 # 1/60 s
-
-fps: 1/60S
 
 #### Storage
 
