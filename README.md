@@ -189,8 +189,8 @@ max_epochs: 1000
 |            | walk                    | run                     | dance                   | gym                     | 
 |------------|-------------------------|-------------------------|-------------------------|-------------------------|
 | AMP        | HumanoidAMP_28-23-29-05 | HumanoidAMP_21-23-21-08 | HumanoidAMP_21-23-22-12 | HumanoidAMP_30-01-16-44 |
-| PPO        |                         |                         |                         |                         |
-| PPO w. hmp |                         |                         |                         |                         |
+| PPO        | HumanoidAMP_13-14-15-16 | HumanoidAMP_13-17-41-46 | HumanoidAMP_13-21-20-07 | HumanoidAMP_14-00-47-13 |
+| PPO w. hmp | HumanoidAMP_13-14-14-50 | HumanoidAMP_13-17-41-07 | HumanoidAMP_13-21-18-57 | HumanoidAMP_14-00-46-07 |
 | train file | PPO                     | PPO                     | PPO                     | PPO                     |
 
 ### Experiment 3 (20241116)
