@@ -138,7 +138,7 @@ python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=
 
 ## Result
 
-### Experiment 1 (20241031)
+<!----### Experiment 1 (20241031)
 
 #### Params
 
@@ -177,8 +177,8 @@ max_epochs: 500
 | SARL w. hmp | -1.410     | **-1.717** | −0.600 | -0.505     |
 | MARL        | -1.648     | -2.123     | −0.662 | -0.652     |
 | MARL w. hmp | **-1.358** | -1.721     | −0.595 | **-0.464** |
-
-### Experiment 1 (20241113)
+--->
+### Experiment 2 (20241113)
 
 #### Params
 
@@ -192,3 +192,22 @@ max_epochs: 1000
 | PPO        |                         |                         |                         |                         |
 | PPO w. hmp |                         |                         |                         |                         |
 | train file | PPO                     | PPO                     | PPO                     | PPO                     |
+
+### Experiment 3 (20241116)
+
+#### Params
+
+max_epochs: 1500
+
+dt: 0.0166 # 1/60 s
+
+fps: 1/60S
+
+#### Storage
+
+|            | walk | run | dance | gym | 
+|------------|------|-----|-------|-----|
+| AMP        |      |     |       |     |
+| PPO        |      |     |       |     |
+| PPO w. hmp |      |     |       |     |
+| train file | PPO  | PPO | PPO   | PPO |
