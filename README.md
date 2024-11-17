@@ -126,7 +126,7 @@ python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl hmp=false wandb_
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=**.pth
 ```
 
-<!--Results:
+Results:
 - Good result (Walk, lr = $5.0 \times 10^{-5}$)
 ```
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=runs/HumanoidAMP_21-17-22-07/nn/HumanoidAMP_21-17-22-17_150.pth
@@ -211,9 +211,9 @@ dt: 0.0166 # 1/60 s
 
 #### Storage
 
-|            | walk | run | dance | gym | 
-|------------|------|-----|-------|-----|
-| AMP        |      |     |       |     |
-| PPO        |      |     |       |     |
-| PPO w. hmp |      |     |       |     |
-| train file | PPO  | PPO | PPO   | PPO |
+|            | walk                    | run | dance                   | gym | 
+|------------|-------------------------|-----|-------------------------|-----|
+| AMP        | HumanoidAMP_16-20-21-46 |     | HumanoidAMP_16-20-23-06 |     |
+| PPO        |                         |     |                         |     |
+| PPO w. hmp |                         |     |                         |     |
+| train file | PPO                     | PPO | PPO                     | PPO |
