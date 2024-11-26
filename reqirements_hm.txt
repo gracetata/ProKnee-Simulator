@@ -1,0 +1,5 @@
+hydra-core>=1.1
+torch==2.4.0
+matplotlib
+scipy
+numpy==1.21.5

@@ -1,7 +1,12 @@
 # Custom
-runs/
+runs*/
 wandb/
 videos/
+isaacgymenvs/tasks/amp/poselib/data/*_cmu.npy
+isaacgymenvs/tasks/amp/poselib/data/*_cmu_amp.npy
+isaacgymenvs/tasks/amp/poselib/data/amp*.npy
+test*
+*.pdf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

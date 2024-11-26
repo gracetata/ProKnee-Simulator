@@ -5,3 +5,4 @@ gym==0.23.1
 numpy==1.19.5
 torch==2.4.0
 pyvirtualdisplay
+matplotlib

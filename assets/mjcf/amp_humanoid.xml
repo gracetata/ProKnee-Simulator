@@ -172,43 +172,4 @@
     <motor name='left_ankle_y'    gear='50' joint='left_ankle_y'/>
     <motor name='left_ankle_z'    gear='50' joint='left_ankle_z'/>
   </actuator>
-
-  <sensor>
-    <subtreelinvel name="pelvis_subtreelinvel" body="pelvis"/>
-    <accelerometer name="root_accel"    site="root"/>
-    <velocimeter name="root_vel"        site="root"/>
-    <gyro name="root_gyro"              site="root"/>
-
-    <force name="left_ankle_force"       site="left_ankle"/>
-    <force name="right_ankle_force"      site="right_ankle"/>
-    <force name="left_knee_force"        site="left_knee"/>
-    <force name="right_knee_force"       site="right_knee"/>
-    <force name="left_hip_force"         site="left_hip"/>
-    <force name="right_hip_force"        site="right_hip"/>
-
-    <torque name="left_ankle_torque"     site="left_ankle"/>
-    <torque name="right_ankle_torque"    site="right_ankle"/>
-    <torque name="left_knee_torque"      site="left_knee"/>
-    <torque name="right_knee_torque"     site="right_knee"/>
-    <torque name="left_hip_torque"       site="left_hip"/>
-    <torque name="right_hip_torque"      site="right_hip"/>
-
-    <touch name="pelvis_touch"           site="pelvis"/>
-    <touch name="upper_waist_touch"      site="upper_waist"/>
-    <touch name="torso_touch"            site="torso"/>
-    <touch name="head_touch"             site="head"/>
-    <touch name="right_upper_arm_touch"  site="right_upper_arm"/>
-    <touch name="right_lower_arm_touch"  site="right_lower_arm"/>
-    <touch name="right_hand_touch"       site="right_hand"/>
-    <touch name="left_upper_arm_touch"   site="left_upper_arm"/>
-    <touch name="left_lower_arm_touch"   site="left_lower_arm"/>
-    <touch name="left_hand_touch"        site="left_hand"/>
-    <touch name="right_thigh_touch"      site="right_thigh"/>
-    <touch name="right_shin_touch"       site="right_shin"/>
-    <touch name="right_foot_touch"       site="right_foot"/>
-    <touch name="left_thigh_touch"       site="left_thigh"/>
-    <touch name="left_shin_touch"        site="left_shin"/>
-    <touch name="left_foot_touch"        site="left_foot"/>
-  </sensor>
-
 </mujoco>

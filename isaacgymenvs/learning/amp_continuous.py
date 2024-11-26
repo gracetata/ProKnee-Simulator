@@ -156,6 +156,12 @@ class AMPAgent(common_agent.CommonAgent):
         batch_dict['returns'] = a2c_common.swap_and_flatten01(mb_returns)
         batch_dict['played_frames'] = self.batch_size
 
+        print("mean value function:", torch.mean(mb_advs).item(),
+              torch.mean(mb_values).item(),
+              torch.mean(mb_fdones).item(),
+              torch.mean(mb_rewards).item(),
+              torch.mean(mb_next_values).item())
+
         for k, v in amp_rewards.items():
             batch_dict[k] = a2c_common.swap_and_flatten01(v)
 

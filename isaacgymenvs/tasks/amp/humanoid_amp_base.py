@@ -192,6 +192,8 @@ class HumanoidAMPBase(VecTask):
         # create force sensors at the feet
         right_foot_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "right_foot")
         left_foot_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "left_foot")
+        left_shin_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "left_shin")
+        left_thigh_idx = self.gym.find_asset_rigid_body_index(humanoid_asset, "left_thigh")
         sensor_pose = gymapi.Transform()
 
         self.gym.create_asset_force_sensor(humanoid_asset, right_foot_idx, sensor_pose)
@@ -228,8 +230,12 @@ class HumanoidAMPBase(VecTask):
             self.gym.enable_actor_dof_force_sensors(env_ptr, handle)
 
             for j in range(self.num_bodies):
-                self.gym.set_rigid_body_color(
-                    env_ptr, handle, j, gymapi.MESH_VISUAL, gymapi.Vec3(0.4706, 0.549, 0.6863))
+                if j in [left_shin_idx, left_thigh_idx, left_foot_idx]:
+                    self.gym.set_rigid_body_color(
+                        env_ptr, handle, j, gymapi.MESH_VISUAL, gymapi.Vec3(1, 0, 0))
+                else:
+                    self.gym.set_rigid_body_color(
+                        env_ptr, handle, j, gymapi.MESH_VISUAL, gymapi.Vec3(0.4706, 0.549, 0.6863))
 
             self.envs.append(env_ptr)
             self.humanoid_handles.append(handle)
@@ -384,6 +390,7 @@ class HumanoidAMPBase(VecTask):
         self._compute_reset()
         
         self.extras["terminate"] = self._terminate_buf
+        # self.extras['contact'] = self._contact_forces[:, self._contact_body_ids]
 
         # debug viz
         if self.viewer and self.debug_viz:
