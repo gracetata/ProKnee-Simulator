@@ -90,6 +90,8 @@ With Human Motion Poior, reward function is $r = - log(1 - \frac{1}{1+e^{-D(s_t,
 
 Without Human Motion Poior, reward function is $r = 1$.
 
+### Train & Run
+
 ```
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl wandb_activate=True motion=walk
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl hmp=false wandb_activate=True motion=walk
