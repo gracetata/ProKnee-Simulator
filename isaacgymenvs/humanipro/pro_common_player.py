@@ -93,6 +93,8 @@ class ProCommonPlayer(players.PpoPlayerContinuous):
 
             print_game_res = False
 
+            # with open("runs/statistic.txt", "a+") as f:
+            #     f.write("---------------------\n")
             for n in range(self.max_steps):
                 obs_dict, done_env_ids = self._env_reset_done()
 
@@ -104,13 +106,19 @@ class ProCommonPlayer(players.PpoPlayerContinuous):
                 obs_dict, r, done, info = self.env_step(self.env, action)
                 cr += r
                 steps += 1
-                # log for torque statistic
-                # with open("runs/humanstatistic.txt", "a+") as f:
+                # log for statistic
+                # print(n)
+                # with open("runs/statistic.txt", "a+") as f:
                 #     agent_obs = obs_dict['obs'].cpu().numpy().tolist()[0]
-                #     torque = 0
-                #     if "torque" in info:
-                #         torque = info['torque'].cpu().numpy().tolist()
-                #     f.write("{},{}\n".format(agent_obs[58], torque[24]))
+                #     contact = info['contact'].cpu().numpy().tolist()[0]
+                #     import math
+                #     def length(a):
+                #         return math.sqrt(a[0] ** 2 + a[1] ** 2 + a[2] ** 2)
+                #
+                #     f.write(
+                #         "{} {} {} {}\n".format(agent_obs[45], agent_obs[58], length(contact[0]), length(contact[1])))
+                #     if n == 598:
+                #         exit(0)
   
                 self._post_step(info)
 

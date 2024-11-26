@@ -202,6 +202,13 @@ class MotionLib():
         total_len = self.get_total_length()
 
         print("Loaded {:d} motions with a total length of {:.3f}s.".format(num_motions, total_len))
+        # print(self._motion_num_frames)
+        # for i in range(self._motion_num_frames[0]):
+        #     root_pos, root_rot, dof_pos, root_vel, root_ang_vel, dof_vel, key_pos = self.get_motion_state([0], total_len/self._motion_num_frames[0]*i)
+        #     print(total_len/self._motion_num_frames[0]*i, root_pos.shape, root_rot.shape, dof_pos.shape, root_vel.shape, root_ang_vel.shape, dof_vel.shape, key_pos.shape)
+        #     with open("runs/statistic.txt", "a+") as f:
+        #         f.write("{} {}\n".format(dof_pos[0][17], dof_pos[0][24]))
+        # exit(0)
 
         return
 

@@ -46,7 +46,7 @@ env:
     restitution: 0.0
 
 sim:
-  dt: 0.0166 # 1/60 s
+  dt: 0.00556 # 1/180s
   substeps: 2
   up_axis: "z"
   use_gpu_pipeline: ${eq:${...pipeline},"gpu"}

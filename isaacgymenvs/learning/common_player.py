@@ -25,6 +25,7 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import math
 
 import torch
 import time
@@ -101,13 +102,14 @@ class CommonPlayer(players.PpoPlayerContinuous):
                 obs_dict, r, done, info = self.env_step(self.env, action)
                 cr += r
                 steps += 1
-                # log for torque statistic
-                # with open("runs/humanstatistic.txt", "a+") as f:
+                # log for statistic
+                # print(n)
+                # with open("runs/statistic.txt", "a+") as f:
                 #     agent_obs = obs_dict['obs'].cpu().numpy().tolist()[0]
-                #     torque = 0
-                #     if "torque" in info:
-                #         torque = info['torque'].cpu().numpy().tolist()
-                #     f.write("{},{}\n".format(agent_obs[58], torque[24]))
+                #     contact = info['contact'].cpu().numpy().tolist()[0]
+                #     def length(a):
+                #         return math.sqrt(a[0]**2 + a[1]**2 + a[2]**2)
+                #     f.write("{} {} {} {}\n".format(agent_obs[45], agent_obs[58], length(contact[0]), length(contact[1])))
   
                 self._post_step(info)
 
@@ -150,6 +152,8 @@ class CommonPlayer(players.PpoPlayerContinuous):
                     sum_game_res += game_res
                     if batch_size//self.num_agents == 1 or games_played >= n_games:
                         break
+
+            exit(0)
 
         print(sum_rewards)
         if print_game_res:

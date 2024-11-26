@@ -390,6 +390,7 @@ class HumanoidAMPBase(VecTask):
         self._compute_reset()
         
         self.extras["terminate"] = self._terminate_buf
+        # self.extras['contact'] = self._contact_forces[:, self._contact_body_ids]
 
         # debug viz
         if self.viewer and self.debug_viz:
