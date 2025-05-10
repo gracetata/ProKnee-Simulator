@@ -153,7 +153,7 @@ class CommonPlayer(players.PpoPlayerContinuous):
                     if batch_size//self.num_agents == 1 or games_played >= n_games:
                         break
 
-            exit(0)
+            # exit(0)
 
         print(sum_rewards)
         if print_game_res:
