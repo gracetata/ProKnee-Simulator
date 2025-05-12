@@ -19,8 +19,6 @@ install instructions if you have any trouble running the samples.
 pip install -r requirements.txt
 ```
 
-FPS: 1/180s for all task.
-
 ## Human Model
 
 ### Human model data preparation

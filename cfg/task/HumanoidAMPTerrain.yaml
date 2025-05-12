@@ -1,46 +1,99 @@
 # used to create the object
-name: Humanoid
+name: HumanoidAMPTerrain
 
 physics_engine: ${..physics_engine}
 
 # if given, will override the device setting in gym.
 env: 
   numEnvs: ${resolve_default:4096,${...num_envs}}
-  envSpacing: 5
-  episodeLength: 1000
+  envSpacing: 3
+  episodeLength: 300
+  cameraFollow: False # if the camera follows humanoid or not
   enableDebugVis: False
 
-  clipActions: 1.0
+  baseInitState:
+    pos: [ 0.0, 0.0, 0.85 ] # x,y,z [m]
+    rot: [ 0.0, 0.0, 0.0, 0 ] # x,y,z,w [quat]
+    vLinear: [ 0.0, 0.0, 0.0 ]  # x,y,z [m/s]
+    vAngular: [ 0.0, 0.0, 0.0 ]  # x,y,z [rad/s]
 
+  terrain:
+    terrainType: trimesh # none, plane, or trimesh
+    staticFriction: 1.0  # [-]
+    dynamicFriction: 1.0  # [-]
+    restitution: 0.        # [-]
+    # rough terrain only:
+    curriculum: true
+    maxInitMapLevel: 0
+    mapLength: 8.
+    mapWidth: 8.
+    numLevels: 10
+    numTerrains: 20
+    horizontal_scale: 0.1
+    # terrain types: [smooth slope, rough slope, stairs up, stairs down, discrete]
+    terrainProportions: [0.1, 0.1, 0.35, 0.25, 0.2]
+    # tri mesh only:
+    slopeTreshold: 0.5
+
+  learn:
+    # rewards
+    terminalReward: 0.0
+    linearVelocityXYRewardScale: 1.0
+
+    # normalization
+    linearVelocityScale: 2.0
+    angularVelocityScale: 0.25
+    heightMeasurementScale: 5.0
+
+    episodeLength_s: 20
+
+  randomCommandVelocityRanges:
+    # train
+    linear_x: [ -1., 1. ] # min max [m/s]
+    linear_y: [ -1., 1. ]   # min max [m/s]
+    yaw: [ 0, 0 ]    # min max [rad/s]
+  
+  pdControl: True
   powerScale: 1.0
+  controlFrequencyInv: 2 # 30 Hz
+  stateInit: "Random"
+  hybridInitProb: 0.5
+  numAMPObsSteps: 2
 
-  # reward parameters
-  headingWeight: 0.5
-  upWeight: 0.1
+  localRootObs: False
+  contactBodies: ["right_foot", "left_foot"]
+  terminationHeight: 2.5
+  enableEarlyTermination: True
 
-  # cost parameters
-  actionsCost: 0.01
-  energyCost: 0.05
-  dofVelocityScale: 0.1
-  angularVelocityScale: 0.25
-  contactForceScale: 0.01
-  jointsAtLimitCost: 0.25
-  deathCost: -1.0
-  terminationHeight: 0.8
+  # animation files to learn from
+  # these motions should use hyperparameters from HumanoidAMPPPO.yaml
+  motion_file: "amp_humanoid_${...motion}.npy"
+  #motion_file: "amp_humanoid_walk.npy"
+  #motion_file: "amp_humanoid_run.npy"
+  #motion_file: "amp_humanoid_dance.npy"
+
+  # these motions should use hyperparameters from HumanoidAMPPPOLowGP.yaml
+  #motion_file: "amp_humanoid_hop.npy"
+  #motion_file: "amp_humanoid_backflip.npy"
+
+  # these motions are added
+  #motion_file: "amp_humanoid_gym.npy"
 
   asset:
-    assetFileName: "mjcf/nv_humanoid.xml"
+    assetFileName: "mjcf/amp_humanoid.xml"
 
   plane:
     staticFriction: 1.0
     dynamicFriction: 1.0
     restitution: 0.0
 
-  # set to True if you use camera sensors in the environment
-  enableCameraSensors: False
+  viewer:
+    refEnv: 0
+    pos: [ 0, 0, 10 ]  # [m]
+    lookat: [ 1., 1, 9 ]  # [m]
 
 sim:
-  dt: 0.0333 # 1/30 s
+  dt: 0.00556 # 1/180s
   substeps: 2
   up_axis: "z"
   use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
@@ -58,7 +111,7 @@ sim:
     default_buffer_size_multiplier: 5.0
     max_gpu_contact_pairs: 8388608 # 8*1024*1024
     num_subscenes: ${....num_subscenes}
-    contact_collection: 0 # 0: CC_NEVER (don't collect contact info), 1: CC_LAST_SUBSTEP (collect only contacts on last substep), 2: CC_ALL_SUBSTEPS (broken - do not use!)
+    contact_collection: 2 # 0: CC_NEVER (don't collect contact info), 1: CC_LAST_SUBSTEP (collect only contacts on last substep), 2: CC_ALL_SUBSTEPS (broken - do not use!)
 
 task:
   randomize: False
@@ -130,3 +183,4 @@ task:
             distribution: "gaussian"
             schedule: "linear"  # "linear" will scale the current random sample by `min(current num steps, schedule_steps) / schedule_steps`
             schedule_steps: 3000
+

@@ -7,7 +7,7 @@ experiment: ''
 # if set to positive integer, overrides the default number of environments
 num_envs: ''
 
-mode: ''
+mode: '' # [marl, sarl]
 hmp: True
 motion: 'walk'
 
