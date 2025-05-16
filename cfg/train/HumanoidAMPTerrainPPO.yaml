@@ -24,7 +24,7 @@ params:
         learn_sigma: False
 
     mlp:
-      units: [1024, 512]
+      units: [2048, 1024, 512]
       activation: relu
       d2rl: False
 
@@ -59,11 +59,11 @@ params:
     normalize_advantage: True
     gamma: 0.99
     tau: 0.95
-    learning_rate: 5e-5
+    learning_rate: ${resolve_default:5e-5,${....learning_rate}}
     lr_schedule: constant
     kl_threshold: 0.008
     score_to_win: 20000
-    max_epochs: ${resolve_default:10000,${....max_iterations}}
+    max_epochs: ${resolve_default:5000,${....max_iterations}}
     save_best_after: 100
     save_frequency: 50
     print_stats: True
@@ -90,5 +90,5 @@ params:
     disc_weight_decay: 0.0001
     normalize_amp_input: True
 
-    task_reward_w: 0.0
-    disc_reward_w: 1.0
+    task_reward_w: ${resolve_default:1,${....task_reward_w}}
+    disc_reward_w: 1

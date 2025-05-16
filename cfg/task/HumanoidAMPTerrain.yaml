@@ -6,9 +6,9 @@ physics_engine: ${..physics_engine}
 # if given, will override the device setting in gym.
 env: 
   numEnvs: ${resolve_default:4096,${...num_envs}}
-  envSpacing: 3
-  episodeLength: 300
-  cameraFollow: False # if the camera follows humanoid or not
+  envSpacing: 5
+  episodeLength: ${...episode_length} # plane: 300, trimesh: int(episodeLength_s / dt + 0.5) = 600
+  cameraFollow: ${...camera_follow} # if the camera follows humanoid or not
   enableDebugVis: False
 
   baseInitState:
@@ -18,9 +18,9 @@ env:
     vAngular: [ 0.0, 0.0, 0.0 ]  # x,y,z [rad/s]
 
   terrain:
-    terrainType: trimesh # none, plane, or trimesh
-    staticFriction: 1.0  # [-]
-    dynamicFriction: 1.0  # [-]
+    terrainType: ${....terrain_type} # none, plane, or trimesh
+    staticFriction: 5  # [-]
+    dynamicFriction: 5  # [-]
     restitution: 0.        # [-]
     # rough terrain only:
     curriculum: true
@@ -49,8 +49,8 @@ env:
 
   randomCommandVelocityRanges:
     # train
-    linear_x: [ -1., 1. ] # min max [m/s]
-    linear_y: [ -1., 1. ]   # min max [m/s]
+    linear_x: [ 0.8, 0.8 ] # min max [m/s]
+    linear_y: [ 0, 0 ]   # min mx [m/s
     yaw: [ 0, 0 ]    # min max [rad/s]
   
   pdControl: True

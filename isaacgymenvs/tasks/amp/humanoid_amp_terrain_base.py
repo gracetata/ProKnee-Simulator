@@ -396,12 +396,17 @@ class HumanoidAMPTerrainBase(VecTask):
 
     def _compute_reward(self, actions):
         # velocity tracking reward
-        lin_vel_error = torch.sum(torch.square(self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
-        rew_lin_vel_xy = torch.exp(-lin_vel_error / 0.25) * self.rew_scales["lin_vel_xy"]
+        # lin_vel_error = torch.sum(torch.square(self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
+        # rew_lin_vel_xy = torch.exp(-lin_vel_error / 0.25) * self.rew_scales["lin_vel_xy"]
+        #
+        # self.rew_buf = rew_lin_vel_xy
+        # self.rew_buf = torch.clip(self.rew_buf, min=0., max=None)
+        # self.rew_buf += self.rew_scales["termination"] * self.reset_buf
 
-        self.rew_buf = rew_lin_vel_xy
-        self.rew_buf = torch.clip(self.rew_buf, min=0., max=None)
-        self.rew_buf += self.rew_scales["termination"] * self.reset_buf
+        # self.rew_buf[:] = compute_humanoid_reward(self.obs_buf)
+
+        lin_speed_x = self.base_lin_vel[:, 0]
+        self.rew_buf = (lin_speed_x > 0.1).float()
         return
 
     def _compute_reset(self):
@@ -532,8 +537,13 @@ class HumanoidAMPTerrainBase(VecTask):
                     z = heights[j]
                     sphere_pose = gymapi.Transform(gymapi.Vec3(x, y, z), r=None)
                     gymutil.draw_lines(sphere_geom, self.gym, self.viewer, self.envs[i], sphere_pose)
+        return
 
+    def render(self):
+        if self.viewer and self.camera_follow:
+            self._update_camera()
 
+        super().render()
         return
 
     def init_height_points(self):
@@ -809,6 +819,12 @@ def dof_to_obs(pose):
         dof_obs_offset += dof_obs_size
 
     return dof_obs
+
+@torch.jit.script
+def compute_humanoid_reward(obs_buf):
+    # type: (Tensor) -> Tensor
+    reward = torch.ones_like(obs_buf[:, 0])
+    return reward
 
 @torch.jit.script
 def compute_humanoid_observations(root_states, dof_pos, dof_vel, key_body_pos, local_root_obs, commands, height):
