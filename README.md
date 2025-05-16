@@ -108,3 +108,8 @@ python train.py task=HumanoidAMPTerrain checkpoint=checkpoints_terrain/walk_amp_
 python train.py task=HumanoidAMPTerrain motion=walk terrain_type=trimesh camera_follow=False episode_length=800 checkpoint=checkpoints_terrain/walk_amp_plane.pth learning_rate=3e-5 task_reward_w=1 max_iterations=16000 wandb_activate=True
 python train.py task=HumanoidAMPTerrain checkpoint=checkpoints_terrain/walk_amp_terrain.pth test=True motion=walk terrain_type=trimesh num_envs=10 episode_length=1000000 camera_follow=False
 ```
+
+```
+python train.py task=HumanoidAMPTerrain train=HumanoidAMPTerrainPro mode=marl motion=walk terrain_type=trimesh camera_follow=False episode_length=800 learning_rate=3e-5 task_reward_w=1 wandb_activate=True
+python train.py task=HumanoidAMPTerrain train=HumanoidAMPTerrainPro mode=marl motion=walk checkpoint=**.pth test=True terrain_type=trimesh num_envs=10 episode_length=1000000 camera_follow=False
+```
