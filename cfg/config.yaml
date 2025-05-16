@@ -7,7 +7,7 @@ experiment: ''
 # if set to positive integer, overrides the default number of environments
 num_envs: ''
 
-mode: ''
+mode: '' # [marl, sarl]
 hmp: True
 motion: 'walk'
 
@@ -75,3 +75,8 @@ hydra:
   run:
     dir: .
 
+terrain_type: "plane"
+camera_follow: True
+episode_length: 300
+learning_rate: ''
+task_reward_w: ''

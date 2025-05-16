@@ -19,8 +19,6 @@ install instructions if you have any trouble running the samples.
 pip install -r requirements.txt
 ```
 
-FPS: 1/180s for all task.
-
 ## Human Model
 
 ### Human model data preparation
@@ -96,4 +94,22 @@ Without Human Motion Poior, reward function is $r = 1$.
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl wandb_activate=True motion=walk
 python train.py task=HumanoidAMP train=HumanoidAMPPro mode=marl hmp=false wandb_activate=True motion=walk
 python train.py task=HumanoidAMP test=True num_envs=1 train=HumanoidAMPPro mode=marl checkpoint=**.pth motion=walk
+```
+
+## Terrain
+
+### Human Model
+```
+python train.py task=HumanoidAMPTerrain motion=walk terrain_type=plane camera_follow=True episode_length=300 task_reward_w=0 max_iterations=2500 wandb_activate=True
+python train.py task=HumanoidAMPTerrain checkpoint=checkpoints_terrain/walk_amp_plane.pth test=True num_envs=1 motion=walk terrain_type=plane camera_follow=True
+```
+
+```
+python train.py task=HumanoidAMPTerrain motion=walk terrain_type=trimesh camera_follow=False episode_length=800 checkpoint=checkpoints_terrain/walk_amp_plane.pth learning_rate=3e-5 task_reward_w=1 max_iterations=16000 wandb_activate=True
+python train.py task=HumanoidAMPTerrain checkpoint=checkpoints_terrain/walk_amp_terrain.pth test=True motion=walk terrain_type=trimesh num_envs=10 episode_length=1000000 camera_follow=False
+```
+
+```
+python train.py task=HumanoidAMPTerrain train=HumanoidAMPTerrainPro mode=marl motion=walk terrain_type=trimesh camera_follow=False episode_length=800 learning_rate=3e-5 task_reward_w=1 wandb_activate=True
+python train.py task=HumanoidAMPTerrain train=HumanoidAMPTerrainPro mode=marl motion=walk checkpoint=**.pth test=True terrain_type=trimesh num_envs=10 episode_length=1000000 camera_follow=False
 ```

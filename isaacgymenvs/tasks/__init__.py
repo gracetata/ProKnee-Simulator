@@ -28,9 +28,11 @@
 
 from .humanoid import Humanoid
 from .humanoid_amp import HumanoidAMP
+from .humanoid_amp_terrain import HumanoidAMPTerrain
 
 # Mappings from strings to environments
 isaacgym_task_map = {
     "Humanoid": Humanoid,
-    "HumanoidAMP": HumanoidAMP
+    "HumanoidAMP": HumanoidAMP,
+    "HumanoidAMPTerrain": HumanoidAMPTerrain
 }
